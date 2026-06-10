@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Asistencia — Encuentro Regional · Amawtay Wasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root {
+  --bg: #F7F4EE;
+  --surface: #FFFFFF;
+  --border: #D8D2C4;
+  --border-light: #EAE6DE;
+  --text: #1A1612;
+  --text-2: #6B6359;
+  --text-3: #9E9589;
+  --accent: #2D5016;
+  --accent-light: #EAF0E3;
+  --accent-mid: #4A7C2A;
+  --gold: #8B6914;
+  --gold-light: #F5EDD6;
+  --red: #8B1A1A;
+  --red-light: #F5E6E6;
+  --entrada: #1A4D2E;
+  --entrada-bg: #E8F2EC;
+  --salida: #7A4A00;
+  --salida-bg: #F5EDD6;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Source Serif 4', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 15px;
+  min-height: 100vh;
+}
+
+.app { max-width: 440px; margin: 0 auto; min-height: 100vh; background: var(--bg); }
+
+.masthead {
+  background: var(--accent);
+  padding: 18px 20px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--gold) 0, var(--gold) 8px, transparent 8px, transparent 12px);
+}
+.masthead-uni {
+  font-family: var(--serif);
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.masthead-event {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: #FFFFFF;
+  line-height: 1.3;
+}
+.masthead-carrera {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.body { padding: 20px; }
+
+.step { display: none; }
+.step.active { display: block; }
+
+.step-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.step-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.04em;
+}
+.back-btn:hover { color: var(--text-2); }
+.back-arrow { font-size: 14px; }
+
+.role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.role-card {
+  padding: 20px 14px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.role-card:hover { border-color: var(--accent-mid); background: var(--accent-light); }
+.role-card:active { background: #DDE8D5; }
+.role-icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+  font-size: 20px;
+}
+.role-name {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.role-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.03em;
+}
+
+.moment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.moment-card {
+  padding: 20px 12px;
+  border-radius: var(--radius-lg);
+  border: 0.5px solid;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.15s;
+}
+.moment-card:active { opacity: 0.8; }
+.m-entrada { background: var(--entrada-bg); border-color: #9EC4AD; }
+.m-salida { background: var(--salida-bg); border-color: #D4B87A; }
+.moment-icon { font-size: 26px; display: block; margin-bottom: 8px; }
+.moment-name {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+}
+.m-entrada .moment-name { color: var(--entrada); }
+.m-salida .moment-name { color: var(--salida); }
+
+.field-group { margin-bottom: 16px; }
+.field-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+input[type=text],
+input[type=number],
+select {
+  width: 100%;
+  font-size: 15px;
+  font-family: var(--serif);
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  transition: border-color 0.15s;
+}
+input[type=text]:focus,
+input[type=number]:focus,
+select:focus { border-color: var(--accent-mid); }
+
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.geo-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+
+.btn-main {
+  width: 100%;
+  padding: 13px;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: var(--accent);
+  color: #FFFFFF;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  letter-spacing: 0.01em;
+  transition: background 0.15s;
+}
+.btn-main:hover { background: var(--accent-mid); }
+.btn-main:active { background: #1A3009; }
+
+.btn-sec {
+  width: 100%;
+  padding: 11px;
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+.btn-sec:hover { background: var(--bg); }
+
+.err-msg {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red);
+  background: var(--red-light);
+  border: 0.5px solid #D4A0A0;
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  margin-top: 10px;
+  display: none;
+  letter-spacing: 0.02em;
+}
+
+.info-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.info-card-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.code-display {
+  font-family: var(--mono);
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 10px;
+  text-align: center;
+  padding: 8px 0 4px;
+}
+.code-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.qr-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 6px 0 4px;
+}
+.qr-wrap canvas, .qr-wrap img { border-radius: 6px; }
+
+.geo-val {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.geo-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.03em;
+}
+
+.divider { height: 0.5px; background: var(--border-light); margin: 20px 0; }
+
+.tabs-wrap { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.tab-btn {
+  padding: 5px 10px;
+  border-radius: 99px;
+  border: 0.5px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  cursor: pointer;
+  background: var(--surface);
+  color: var(--text-2);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: background 0.12s;
+}
+.tab-btn.on {
+  background: var(--accent-light);
+  border-color: var(--accent-mid);
+  color: var(--accent);
+}
+.count-badge {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 99px;
+  font-size: 9px;
+  padding: 1px 5px;
+  margin-left: 3px;
+}
+
+.reg-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 0.5px solid var(--border-light);
+}
+.reg-row:last-child { border-bottom: none; }
+.reg-cedula {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+.reg-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+.pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+.pill-e { background: var(--entrada-bg); color: var(--entrada); }
+.pill-s { background: var(--salida-bg); color: var(--salida); }
+.reg-hora {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 3px;
+  text-align: right;
+}
+.empty-note {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+  padding: 20px 0;
+  letter-spacing: 0.03em;
+}
+
+.success-wrap { text-align: center; padding: 36px 0; }
+.success-circle {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--entrada-bg);
+  border: 0.5px solid #9EC4AD;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 26px;
+}
+.success-title {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.success-detail {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.03em;
+  line-height: 1.7;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="masthead">
+    <div class="masthead-uni">Universidad Intercultural de las Nacionalidades y Pueblos Indígenas Amawtay Wasi</div>
+    <div class="masthead-event">Encuentro Regional<br>13 de junio de 2026</div>
+    <div class="masthead-carrera">Carrera de Lengua y Cultura</div>
+  </div>
+
+  <div class="body">
+
+    <!-- ROL -->
+    <div id="s-rol" class="step active">
+      <div class="step-label">Registro de asistencia</div>
+      <div class="step-title">¿Quién eres?</div>
+      <div class="role-grid">
+        <div class="role-card" onclick="irDocente()" role="button" tabindex="0">
+          <div class="role-icon">🎓</div>
+          <div class="role-name">Docente</div>
+          <div class="role-sub">QR y lista</div>
+        </div>
+        <div class="role-card" onclick="irEst()" role="button" tabindex="0">
+          <div class="role-icon">📋</div>
+          <div class="role-name">Estudiante</div>
+          <div class="role-sub">Mi asistencia</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCENTE -->
+    <div id="s-docente" class="step">
+      <button class="back-btn" onclick="ir('s-rol')"><span class="back-arrow">←</span> volver</button>
+      <div class="step-label">Panel docente</div>
+
+      <div class="info-card">
+        <div class="info-card-label">Código del día — di en voz alta</div>
+        <div class="code-display" id="cod-display">----</div>
+        <div class="code-note">Cambia automáticamente cada día</div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-label">QR de acceso — proyecta desde tu teléfono</div>
+        <div class="qr-wrap" id="qr-wrap"></div>
+        <div class="code-note" style="margin-top:6px">Los estudiantes escanean este código</div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-label">Tu ubicación registrada</div>
+        <div class="geo-val" id="doc-geo-val">Obteniendo GPS…</div>
+        <div class="geo-sub" id="doc-geo-sub">Radio de referencia: 300 m</div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="step-label">Registros del día</div>
+      <div class="tabs-wrap" id="doc-tabs"></div>
+      <div id="doc-lista"></div>
+      <button class="btn-sec" onclick="exportCSV()">↓ Exportar lista (.csv)</button>
+    </div>
+
+    <!-- MOMENTO -->
+    <div id="s-momento" class="step">
+      <button class="back-btn" onclick="ir('s-rol')"><span class="back-arrow">←</span> volver</button>
+      <div class="step-label">Paso 1 de 2</div>
+      <div class="step-title">¿Qué momento es?</div>
+      <div class="moment-grid">
+        <div class="moment-card m-entrada" onclick="selMomento('Entrada')" role="button" tabindex="0">
+          <span class="moment-icon">↘</span>
+          <span class="moment-name">Entrada</span>
+        </div>
+        <div class="moment-card m-salida" onclick="selMomento('Salida')" role="button" tabindex="0">
+          <span class="moment-icon">↗</span>
+          <span class="moment-name">Salida</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATOS -->
+    <div id="s-datos" class="step">
+      <button class="back-btn" onclick="ir('s-momento')"><span class="back-arrow">←</span> volver</button>
+      <div class="step-label" id="datos-label">Paso 2 de 2 — Entrada</div>
+      <div class="step-title">Tus datos</div>
+
+      <div class="field-group">
+        <label class="field-label" for="inp-cedula">Número de cédula</label>
+        <input type="number" id="inp-cedula" placeholder="Ej: 1712345678" inputmode="numeric" autocomplete="off" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="inp-region">Región / Grupo</label>
+        <div class="select-wrap">
+          <select id="inp-region">
+            <option value="">Selecciona tu región…</option>
+            <option>Región Costa</option>
+            <option>Región Sierra Norte</option>
+            <option>Región Sierra Centro</option>
+            <option>Amazonía Centro-Norte</option>
+            <option>Sierra y Amazonía Sur</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="inp-rol">Rol</label>
+        <div class="select-wrap">
+          <select id="inp-rol">
+            <option value="">Selecciona…</option>
+            <option>Estudiante</option>
+            <option>Docente</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="geo-note" id="geo-msg">Obteniendo ubicación GPS…</div>
+
+      <button class="btn-main" onclick="registrar()">Confirmar asistencia</button>
+      <div class="err-msg" id="err-msg"></div>
+    </div>
+
+    <!-- OK -->
+    <div id="s-ok" class="step">
+      <div class="success-wrap">
+        <div class="success-circle">✓</div>
+        <div class="success-title">Asistencia registrada</div>
+        <div class="success-detail" id="ok-detalle"></div>
+        <button class="btn-main" style="max-width:240px;margin:24px auto 0;display:block" onclick="ir('s-momento')">Registrar otra persona</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const REGIONES = ['Región Costa','Región Sierra Norte','Región Sierra Centro','Amazonía Centro-Norte','Sierra y Amazonía Sur'];
+const RADIO = 300;
+let est = { momento: '', geo: null };
+let docGeo = null;
+let regs = [];
+let tabActivo = REGIONES[0];
+
+try { regs = JSON.parse(localStorage.getItem('aw_regs') || '[]'); } catch(e) {}
+
+function ir(id) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function generarCodigo() {
+  const d = new Date();
+  const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  let h = seed ^ 0xDEAD;
+  h = ((h >> 16) ^ h) * 0x45D9F3B | 0;
+  h = (h >> 16) ^ h;
+  return String(Math.abs(h) % 9000 + 1000);
+}
+
+function irDocente() {
+  ir('s-docente');
+  document.getElementById('cod-display').textContent = generarCodigo();
+  const wrap = document.getElementById('qr-wrap');
+  wrap.innerHTML = '';
+  try {
+    new QRCode(wrap, {
+      text: location.href,
+      width: 160, height: 160,
+      colorDark: '#2D5016',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) { wrap.textContent = location.href; }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      docGeo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      try { localStorage.setItem('aw_docgeo', JSON.stringify(docGeo)); } catch(e) {}
+      document.getElementById('doc-geo-val').textContent = docGeo.lat.toFixed(5) + ', ' + docGeo.lng.toFixed(5);
+      document.getElementById('doc-geo-sub').textContent = 'GPS activo · radio referencia ' + RADIO + ' m';
+    }, () => {
+      document.getElementById('doc-geo-val').textContent = 'No se pudo obtener GPS';
+    });
+  }
+  renderDocente();
+}
+
+function irEst() {
+  ir('s-momento');
+  document.getElementById('geo-msg').textContent = 'Obteniendo ubicación GPS…';
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      est.geo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      document.getElementById('geo-msg').textContent = 'Ubicación obtenida.';
+    }, () => {
+      est.geo = null;
+      document.getElementById('geo-msg').textContent = 'Sin GPS — ubicación no verificada.';
+    });
+  }
+}
+
+function selMomento(m) {
+  est.momento = m;
+  document.getElementById('datos-label').textContent = 'Paso 2 de 2 — ' + m;
+  document.getElementById('err-msg').style.display = 'none';
+  ir('s-datos');
+}
+
+function distM(a, b) {
+  const R = 6371000;
+  const dLat = (b.lat - a.lat) * Math.PI / 180;
+  const dLng = (b.lng - a.lng) * Math.PI / 180;
+  const x = Math.sin(dLat/2)**2 + Math.cos(a.lat*Math.PI/180) * Math.cos(b.lat*Math.PI/180) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+}
+
+function showErr(m) {
+  const e = document.getElementById('err-msg');
+  e.textContent = m;
+  e.style.display = 'block';
+}
+
+function registrar() {
+  const ced = document.getElementById('inp-cedula').value.trim();
+  const reg = document.getElementById('inp-region').value;
+  const rol = document.getElementById('inp-rol').value;
+  document.getElementById('err-msg').style.display = 'none';
+
+  if (!ced || ced.length < 6) { showErr('Ingresa tu número de cédula.'); return; }
+  if (!reg) { showErr('Selecciona tu región.'); return; }
+  if (!rol) { showErr('Selecciona tu rol.'); return; }
+
+  const ahora = new Date();
+  let centro = docGeo;
+  try { if (!centro) centro = JSON.parse(localStorage.getItem('aw_docgeo') || 'null'); } catch(e) {}
+  let distancia = 'sin GPS';
+  if (centro && est.geo) distancia = Math.round(distM(centro, est.geo)) + ' m';
+
+  const r = {
+    cedula: ced,
+    region: reg,
+    rol,
+    momento: est.momento,
+    hora: ahora.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' }),
+    fecha: ahora.toLocaleDateString('es-EC'),
+    lat: est.geo ? est.geo.lat.toFixed(6) : '',
+    lng: est.geo ? est.geo.lng.toFixed(6) : '',
+    distancia
+  };
+  regs.push(r);
+  try { localStorage.setItem('aw_regs', JSON.stringify(regs)); } catch(e) {}
+
+  document.getElementById('ok-detalle').textContent =
+    reg + '\n' + rol + ' · ' + est.momento + ' · ' + r.hora + '\n' + (distancia !== 'sin GPS' ? distancia + ' del punto de clase' : 'sin verificación GPS');
+  ir('s-ok');
+}
+
+function renderDocente() {
+  const tabs = document.getElementById('doc-tabs');
+  tabs.innerHTML = REGIONES.map(r => {
+    const n = regs.filter(x => x.region === r).length;
+    const short = r.replace('Región ','').replace('Amazonía ','Az.').replace('Sierra y Amazonía ','S+Az');
+    return `<button class="tab-btn ${r === tabActivo ? 'on' : ''}" onclick="setTab('${r}')">${short}<span class="count-badge">${n}</span></button>`;
+  }).join('');
+
+  const lista = document.getElementById('doc-lista');
+  const f = regs.filter(x => x.region === tabActivo);
+  if (!f.length) { lista.innerHTML = '<div class="empty-note">Sin registros aún</div>'; return; }
+  lista.innerHTML = f.slice().reverse().slice(0, 25).map(r =>
+    `<div class="reg-row">
+      <div>
+        <div class="reg-cedula">${r.cedula}</div>
+        <div class="reg-meta">${r.rol} · ${r.distancia}</div>
+      </div>
+      <div style="text-align:right">
+        <span class="pill ${r.momento === 'Entrada' ? 'pill-e' : 'pill-s'}">${r.momento}</span>
+        <div class="reg-hora">${r.hora}</div>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function setTab(r) { tabActivo = r; renderDocente(); }
+
+function exportCSV() {
+  if (!regs.length) { alert('No hay registros aún.'); return; }
+  const cols = ['Cedula', 'Region', 'Rol', 'Momento', 'Hora', 'Fecha', 'Latitud', 'Longitud', 'Distancia'];
+  const rows = regs.map(r =>
+    [r.cedula, r.region, r.rol, r.momento, r.hora, r.fecha, r.lat, r.lng, r.distancia]
+    .map(v => `"${v}"`).join(',')
+  );
+  const csv = '\uFEFF' + [cols.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  a.download = 'asistencia_encuentro_regional_' + new Date().toLocaleDateString('es-EC').replace(/\//g,'-') + '.csv';
+  a.click();
+}
+</script>
+</body>
+</html>
