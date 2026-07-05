@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Registro de Desafíos — Prácticas Preprofesionales · Amawtay Wasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F4EE;
+  --surface: #FFFFFF;
+  --border: #D8D2C4;
+  --border-light: #EAE6DE;
+  --text: #1A1612;
+  --text-2: #6B6359;
+  --text-3: #9E9589;
+  --accent: #2D5016;
+  --accent-light: #EAF0E3;
+  --accent-mid: #4A7C2A;
+  --gold: #8B6914;
+  --red: #8B1A1A;
+  --red-light: #F5E6E6;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Source Serif 4', serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--serif); font-size: 15px; min-height: 100vh; }
+.app { max-width: 440px; margin: 0 auto; min-height: 100vh; background: var(--bg); }
+
+.masthead {
+  background: var(--accent);
+  padding: 18px 20px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--gold) 0, var(--gold) 8px, transparent 8px, transparent 12px);
+}
+.masthead-uni { font-family: var(--serif); font-size: 10px; font-weight: 300; color: rgba(255,255,255,0.7); letter-spacing: 0.04em; line-height: 1.5; margin-bottom: 6px; }
+.masthead-event { font-family: var(--serif); font-size: 17px; font-weight: 600; color: #FFFFFF; line-height: 1.3; }
+.masthead-carrera { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 5px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.body { padding: 20px; }
+.step { display: none; }
+.step.active { display: block; }
+
+.objetivo-box {
+  background: var(--accent-light);
+  border: 0.5px solid #9EC4AD;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.objetivo-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.objetivo-texto {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.clausula-box {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.clausula-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.clausula-texto {
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.clausula-texto strong { color: var(--text); }
+.checkbox-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.checkbox-wrap input[type=checkbox] {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  margin-top: 2px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.checkbox-label {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.step-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.step-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.field-group { margin-bottom: 16px; }
+.field-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+input[type=text], select {
+  width: 100%;
+  font-size: 15px;
+  font-family: var(--serif);
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  transition: border-color 0.15s;
+}
+input[type=text]:focus, select:focus { border-color: var(--accent-mid); }
+
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.ciclo-paralelo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.paralelos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+.paralelo-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-2);
+  transition: background 0.12s, border-color 0.12s;
+}
+.paralelo-item input[type=checkbox] {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.paralelo-item.checked {
+  background: var(--accent-light);
+  border-color: var(--accent-mid);
+  color: var(--accent);
+}
+
+.radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--text);
+  transition: background 0.12s, border-color 0.12s;
+}
+.radio-item input[type=radio] { accent-color: var(--accent); cursor: pointer; }
+.radio-item.checked { background: var(--accent-light); border-color: var(--accent-mid); color: var(--accent); }
+
+.gps-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.gps-status {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 8px;
+  letter-spacing: 0.03em;
+}
+.gps-coords {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+.btn-gps {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 0.5px solid var(--accent-mid);
+  background: var(--accent-light);
+  color: var(--accent);
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-gps:hover { background: #DDE8D5; }
+
+.btn-main {
+  width: 100%;
+  padding: 13px;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: var(--accent);
+  color: #FFFFFF;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+.btn-main:hover { background: var(--accent-mid); }
+.btn-main:active { background: #1A3009; }
+.btn-main:disabled { background: var(--text-3); cursor: not-allowed; }
+
+.btn-sec {
+  width: 100%;
+  padding: 11px;
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+.btn-sec:hover { background: var(--bg); }
+
+.err-msg {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red);
+  background: var(--red-light);
+  border: 0.5px solid #D4A0A0;
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  margin-top: 10px;
+  display: none;
+  letter-spacing: 0.02em;
+}
+
+.success-wrap { text-align: center; padding: 36px 0; }
+.success-circle {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  border: 0.5px solid #9EC4AD;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 26px;
+}
+.success-title { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.success-detail { font-family: var(--mono); font-size: 11px; color: var(--text-3); letter-spacing: 0.03em; line-height: 1.7; margin-bottom: 24px; }
+
+.envio-box {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  text-align: left;
+  margin-top: 16px;
+}
+.envio-title { font-family: var(--mono); font-size: 10px; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+.envio-step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.envio-num {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.envio-alt {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  background: var(--bg);
+  border: 0.5px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+.divider { height: 0.5px; background: var(--border-light); margin: 16px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="masthead">
+    <div class="masthead-uni">Universidad Intercultural de las Nacionalidades y Pueblos Indígenas Amawtay Wasi</div>
+    <div class="masthead-event">Registro de Desafíos<br>Prácticas Preprofesionales</div>
+    <div class="masthead-carrera">Carrera de Lengua y Cultura</div>
+  </div>
+
+  <div class="body">
+
+    <!-- FORMULARIO -->
+    <div id="s-form" class="step active">
+
+      <!-- Objetivo -->
+      <div class="objetivo-box">
+        <div class="objetivo-label">Objetivo del registro</div>
+        <div class="objetivo-texto">Construir un registro georreferenciado de las ubicaciones de los desafíos de prácticas preprofesionales para la elaboración de mapas, reportes y análisis a nivel nacional.</div>
+      </div>
+
+      <!-- Campos -->
+      <div class="step-label">Datos del líder del colectivo</div>
+
+      <div class="field-group">
+        <label class="field-label" for="inp-apellidos">Apellidos y nombres</label>
+        <input type="text" id="inp-apellidos" placeholder="Apellidos y nombres completos" autocomplete="off" />
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Ciclo y paralelo</div>
+        <div class="ciclo-paralelo-grid">
+          <div class="select-wrap">
+            <select id="inp-ciclo">
+              <option value="">Ciclo…</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+          <div class="select-wrap">
+            <select id="inp-paralelo">
+              <option value="">Paralelo…</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">¿El colectivo tiene miembros de otros ciclos o paralelos?</div>
+        <div class="radio-grid">
+          <label class="radio-item" id="radio-no-label">
+            <input type="radio" name="otros" value="no" onchange="toggleOtros(false)" /> No
+          </label>
+          <label class="radio-item" id="radio-si-label">
+            <input type="radio" name="otros" value="si" onchange="toggleOtros(true)" /> Sí
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group" id="otros-paralelos-wrap" style="display:none">
+        <div class="field-label">Marca los ciclos y paralelos presentes</div>
+        <div class="paralelos-grid" id="paralelos-grid"></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Ubicación GPS del desafío</div>
+        <div class="gps-card">
+          <button class="btn-gps" onclick="obtenerGPS()" id="btn-gps">📍 Obtener mi ubicación</button>
+          <div class="gps-status" id="gps-status">Toca el botón para capturar las coordenadas del lugar donde realizas tu práctica.</div>
+          <div class="gps-coords" id="gps-coords" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- Cláusula -->
+      <div class="clausula-box">
+        <div class="clausula-title">Tratamiento de datos personales</div>
+        <div class="clausula-texto">
+          Los datos registrados (apellidos y nombres, ciclo, paralelo y coordenadas GPS) serán tratados por la <strong>Coordinación de Vinculación de la Carrera de Lengua y Cultura</strong> exclusivamente para la construcción de mapas georreferenciados, reportes y análisis académicos de las prácticas preprofesionales.<br><br>
+          Los datos no serán compartidos con terceros ni utilizados para otros fines. En cumplimiento de la <strong>Ley Orgánica de Protección de Datos Personales del Ecuador (LOPDP)</strong>, puedes solicitar acceso, rectificación o eliminación de tus datos escribiendo a <strong>vinculacion.lyc@uaw.edu.ec</strong>.
+        </div>
+        <label class="checkbox-wrap" id="clausula-label">
+          <input type="checkbox" id="chk-clausula" onchange="toggleClausula()" />
+          <span class="checkbox-label">He leído y acepto el tratamiento de mis datos personales conforme a lo descrito.</span>
+        </label>
+      </div>
+
+      <button class="btn-main" onclick="registrar()" id="btn-registrar" disabled>Registrar ubicación</button>
+      <div class="err-msg" id="err-msg"></div>
+    </div>
+
+    <!-- ÉXITO -->
+    <div id="s-ok" class="step">
+      <div class="success-wrap">
+        <div class="success-circle">✓</div>
+        <div class="success-title">Registro guardado</div>
+        <div class="success-detail" id="ok-detalle"></div>
+
+        <div class="envio-box">
+          <div class="envio-title">Envía tu registro al coordinador</div>
+
+          <div class="envio-step">
+            <div class="envio-num">1</div>
+            <div>Descarga el archivo con tus datos.</div>
+          </div>
+          <button class="btn-sec" onclick="descargarCSV()">↓ Descargar archivo (.csv)</button>
+
+          <div class="divider"></div>
+
+          <div class="envio-step">
+            <div class="envio-num">2</div>
+            <div>Toca el botón para abrir Outlook con el correo de destino ya preparado.</div>
+          </div>
+          <button class="btn-main" onclick="abrirOutlook()">✉ Enviar por correo institucional</button>
+
+          <div class="envio-alt">
+            ¿Outlook no se abre? Adjunta el archivo descargado y envíalo manualmente a:<br>
+            <strong>vinculacion.lyc@uaw.edu.ec</strong><br>
+            Asunto: <strong>Registro desafío PPP — [tu nombre]</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const CICLOS = ['1','2','3','4','5','6','7','8'];
+const PARALELOS = ['A','B','C'];
+let geoData = null;
+let registro = null;
+
+// Construir grilla de paralelos
+const grid = document.getElementById('paralelos-grid');
+CICLOS.forEach(c => {
+  PARALELOS.forEach(p => {
+    const label = document.createElement('label');
+    label.className = 'paralelo-item';
+    label.id = 'pl-' + c + p;
+    label.innerHTML = `<input type="checkbox" value="${c}${p}" onchange="updateParalelo(this)" /> ${c}${p}`;
+    grid.appendChild(label);
+  });
+});
+
+function toggleOtros(mostrar) {
+  document.getElementById('otros-paralelos-wrap').style.display = mostrar ? 'block' : 'none';
+  document.getElementById('radio-si-label').classList.toggle('checked', mostrar);
+  document.getElementById('radio-no-label').classList.toggle('checked', !mostrar);
+  if (!mostrar) {
+    document.querySelectorAll('#paralelos-grid input[type=checkbox]').forEach(cb => {
+      cb.checked = false;
+      document.getElementById('pl-' + cb.value).classList.remove('checked');
+    });
+  }
+}
+
+function updateParalelo(cb) {
+  document.getElementById('pl-' + cb.value).classList.toggle('checked', cb.checked);
+}
+
+function obtenerGPS() {
+  const btn = document.getElementById('btn-gps');
+  const status = document.getElementById('gps-status');
+  const coords = document.getElementById('gps-coords');
+  btn.textContent = 'Obteniendo ubicación…';
+  btn.disabled = true;
+  if (!navigator.geolocation) {
+    status.textContent = 'Tu navegador no soporta GPS. Intenta con Chrome o Safari.';
+    btn.textContent = '📍 Reintentar';
+    btn.disabled = false;
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(pos => {
+    geoData = {
+      lat: pos.coords.latitude.toFixed(6),
+      lng: pos.coords.longitude.toFixed(6),
+      precision: Math.round(pos.coords.accuracy) + ' m'
+    };
+    status.textContent = 'Precisión: ' + geoData.precision;
+    coords.textContent = geoData.lat + ', ' + geoData.lng;
+    coords.style.display = 'block';
+    btn.textContent = '📍 Actualizar ubicación';
+    btn.disabled = false;
+  }, err => {
+    let msg = 'No se pudo obtener la ubicación.';
+    if (err.code === 1) msg = 'Permiso denegado. Activa la ubicación en tu navegador.';
+    if (err.code === 2) msg = 'Señal GPS no disponible. Intenta al aire libre.';
+    status.textContent = msg;
+    btn.textContent = '📍 Reintentar';
+    btn.disabled = false;
+  }, { enableHighAccuracy: true, timeout: 15000 });
+}
+
+function toggleClausula() {
+  const aceptado = document.getElementById('chk-clausula').checked;
+  document.getElementById('btn-registrar').disabled = !aceptado;
+}
+
+function showErr(m) {
+  const e = document.getElementById('err-msg');
+  e.textContent = m;
+  e.style.display = 'block';
+  e.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function registrar() {
+  document.getElementById('err-msg').style.display = 'none';
+  const apellidos = document.getElementById('inp-apellidos').value.trim();
+  const ciclo = document.getElementById('inp-ciclo').value;
+  const paralelo = document.getElementById('inp-paralelo').value;
+  const otrosRadio = document.querySelector('input[name="otros"]:checked');
+
+  if (!apellidos) { showErr('Ingresa tus apellidos y nombres.'); return; }
+  if (!ciclo) { showErr('Selecciona tu ciclo.'); return; }
+  if (!paralelo) { showErr('Selecciona tu paralelo.'); return; }
+  if (!otrosRadio) { showErr('Indica si hay miembros de otros ciclos o paralelos.'); return; }
+  if (!geoData) { showErr('Captura tu ubicación GPS antes de continuar.'); return; }
+
+  let otrosParalelos = '';
+  if (otrosRadio.value === 'si') {
+    const seleccionados = [...document.querySelectorAll('#paralelos-grid input[type=checkbox]:checked')].map(cb => cb.value);
+    if (!seleccionados.length) { showErr('Marca al menos un ciclo/paralelo adicional.'); return; }
+    otrosParalelos = seleccionados.join(', ');
+  }
+
+  const ahora = new Date();
+  registro = {
+    apellidos_nombres: apellidos,
+    ciclo,
+    paralelo,
+    otros_paralelos: otrosParalelos || 'No',
+    latitud: geoData.lat,
+    longitud: geoData.lng,
+    precision_gps: geoData.precision,
+    fecha: ahora.toLocaleDateString('es-EC'),
+    hora: ahora.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' })
+  };
+
+  try { localStorage.setItem('aw_desafio_ultimo', JSON.stringify(registro)); } catch(e) {}
+
+  document.getElementById('ok-detalle').textContent =
+    apellidos + '\n' +
+    'Ciclo ' + ciclo + paralelo + (otrosParalelos ? ' · Con: ' + otrosParalelos : '') + '\n' +
+    geoData.lat + ', ' + geoData.lng + '\n' +
+    ahora.toLocaleDateString('es-EC') + ' · ' + ahora.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit' });
+
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-ok').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function descargarCSV() {
+  if (!registro) return;
+  const cols = ['Apellidos y Nombres', 'Ciclo', 'Paralelo', 'Otros Ciclos/Paralelos', 'Latitud', 'Longitud', 'Precision GPS', 'Fecha', 'Hora'];
+  const fila = [
+    registro.apellidos_nombres, registro.ciclo, registro.paralelo,
+    registro.otros_paralelos, registro.latitud, registro.longitud,
+    registro.precision_gps, registro.fecha, registro.hora
+  ].map(v => `"${v}"`).join(',');
+  const csv = '\uFEFF' + cols.join(',') + '\n' + fila;
+  const nombre = 'desafio_ppp_' + registro.apellidos_nombres.replace(/\s+/g,'_').toLowerCase() + '.csv';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  a.download = nombre;
+  a.click();
+}
+
+function abrirOutlook() {
+  if (!registro) return;
+  const asunto = encodeURIComponent('Registro desafío PPP — ' + registro.apellidos_nombres);
+  const cuerpo = encodeURIComponent(
+    'Estimado/a coordinador/a,\n\nAdjunto el archivo CSV con mi registro de ubicación del desafío de prácticas preprofesionales.\n\n' +
+    'Nombre: ' + registro.apellidos_nombres + '\n' +
+    'Ciclo/Paralelo: ' + registro.ciclo + registro.paralelo + '\n' +
+    'Coordenadas: ' + registro.latitud + ', ' + registro.longitud + '\n' +
+    'Fecha: ' + registro.fecha + '\n\n' +
+    'Recuerde adjuntar el archivo .csv descargado.\n\nSaludos.'
+  );
+  window.location.href = 'mailto:vinculacion.lyc@uaw.edu.ec?subject=' + asunto + '&body=' + cuerpo;
+}
+</script>
+</body>
+</html>
